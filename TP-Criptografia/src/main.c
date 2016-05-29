@@ -42,7 +42,7 @@ int main() {
 
 void iniciar_programa() {
 	printf("CriptoApp - Grain128a\n\n");
-	printf("Elegir una opción:\n");
+	printf("Elegir una opcion:\n");
 	printf("1 - Encriptar archivo.bmp\n");
 	printf("2 - Desencriptar archivo.bmp\n");
 	return;
@@ -59,7 +59,7 @@ void elegir_opcion(int *opcion) {
 	printf("\n");
 
 	while(*opcion != 1 && *opcion != 2) {
-		printf("Opción incorrecta. Elegir una opción entre [1;2]\n");
+		printf("Elegir una opcion entre [1;2]\n");
 		scanf("%u",opcion);
 		printf("\n");
 	}
