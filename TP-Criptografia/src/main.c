@@ -5,27 +5,27 @@
 #include "bpm-file.h"
 
 void iniciar_programa();
-void abrir_imagen();
+void abrir_imagen(bmpInfoHeader *, char **);
 void elegir_opcion(int *);
-void encriptar_imagen(char *, bmpInfoHeader *);
-void desencriptar_imagen(char *, bmpInfoHeader *);
+void encriptar_imagen(char *, bmpInfoHeader);
+void desencriptar_imagen(char *, bmpInfoHeader);
 
 char *dir = "C:\\boca.bmp";
 
 int main() {
 
-	int opcion;
+	int opcion = 0;
 	bmpInfoHeader header;
-	char *body;
+	char *body = NULL;
 
 	iniciar_programa();
-	abrir_imagen(body, &header);
+	abrir_imagen(&header, &body);
 	elegir_opcion(&opcion);
 
 	if(opcion == 1) {
-		encriptar_imagen(body, &header);
+		encriptar_imagen(body, header);
 	} else if(opcion == 2) {
-		desencriptar_imagen(body, &header);
+		desencriptar_imagen(body, header);
 	}
 
 	//Como Descifrar
@@ -48,8 +48,8 @@ void iniciar_programa() {
 	return;
 }
 
-void abrir_imagen(char *body, bmpInfoHeader *header) {
-	body = LoadBMP(dir,header);
+void abrir_imagen(bmpInfoHeader *header, char **body) {
+	*body = LoadBMP(dir,header);
 	return;
 }
 
@@ -67,11 +67,11 @@ void elegir_opcion(int *opcion) {
 	return;
 }
 
-void encriptar_imagen(char *plaintext, bmpInfoHeader *header) {
+void encriptar_imagen(char *plaintext, bmpInfoHeader header) {
 	ECRYPT_ctx ctx;
 	u8 key[16] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0x12,0x34,0x56,0x78,0x9a,0xbc,0xde,0xf0},
 		IV[12] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0x12,0x34,0x56,0x78};
-	u32 msglen = header->imgsize;
+	u32 msglen = header.imgsize;
 	char ciphertext[msglen];
 	ECRYPT_init();
 	ECRYPT_keysetup(&ctx,key,128,96);
@@ -80,7 +80,16 @@ void encriptar_imagen(char *plaintext, bmpInfoHeader *header) {
 	SaveBMP(dir, ciphertext, msglen);
 }
 
-void desencriptar_imagen(char *ciphertext, bmpInfoHeader *header) {
-	//TODO
+void desencriptar_imagen(char *ciphertext, bmpInfoHeader header) {
+	ECRYPT_ctx ctx;
+	u8 key[16] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0x12,0x34,0x56,0x78,0x9a,0xbc,0xde,0xf0},
+		IV[12] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0x12,0x34,0x56,0x78};
+	u32 msglen = header.imgsize;
+	char plaintext[msglen];
+	ECRYPT_init();
+	ECRYPT_keysetup(&ctx,key,128,96);
+	ECRYPT_ivsetup(&ctx,IV);
+	ECRYPT_decrypt_bytes(&ctx,ciphertext,plaintext,msglen);
+	SaveBMP(dir, plaintext, msglen);
 	return;
 }
