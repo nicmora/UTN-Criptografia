@@ -28,15 +28,6 @@ int main() {
 		desencriptar_imagen(body, header);
 	}
 
-	//Como Descifrar
-	/*ECRYPT_ctx ctx2;
-	u32 msglen2 = strlen(ciphertext);
-	char plaintext2[msglen2];
-	ECRYPT_init();
-	ECRYPT_keysetup(&ctx2,key,128,96);
-	ECRYPT_ivsetup(&ctx2,IV);
-	ECRYPT_decrypt_bytes(&ctx2,ciphertext,plaintext2,12);*/
-
 	return 0;
 }
 
