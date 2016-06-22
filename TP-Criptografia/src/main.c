@@ -10,13 +10,14 @@ void abrir_imagen(bmpInfoHeader *, char **);
 void elegir_opcion(int *);
 void encriptar_imagen(char *, bmpInfoHeader);
 void desencriptar_imagen(char *, bmpInfoHeader);
-void simulacion(char *, bmpInfoHeader);
+void simulacion(char *, bmpInfoHeader, int *);
 
-char *dir = "C:\\boca.bmp";
+char *dir = "./imagen.bmp";
 
 int main() {
 
 	int opcion = 0;
+	int espera = 0;
 	bmpInfoHeader header;
 	char *body = NULL;
 
@@ -29,18 +30,24 @@ int main() {
 	} else if(opcion == 2) {
 		desencriptar_imagen(body, header);
 	} else if(opcion == 3) {
-		simulacion(body, header);
+		simulacion(body, header, &espera);
 	}
 
 	exit;
 }
 
 void iniciar_programa() {
-	printf("CriptoApp - Grain128a\n\n");
-	printf("Elegir una opcion:\n");
-	printf("1 - Encriptar archivo.bmp\n");
-	printf("2 - Desencriptar archivo.bmp\n");
-	printf("3 - Realizar simulacion\n");
+
+	printf("\n   ** CriptoApp - Grain128a **\n\n");
+
+	sleep(1);
+	printf(" Esta aplicacion trabaja con el archivo imagen.bmp ubicada en el\n mismo directorio de ejecucion.\n\n");
+	sleep(3);
+	printf(" Seleccione una opcion para proceder:\n");
+	printf("  1 - Encriptar imagen.bmp\n");
+	printf("  2 - Desencriptar imagen.bmp\n");
+	printf("  3 - Realizar simulacion\n");
+	printf(" Seleccion: ");
 	return;
 }
 
@@ -56,7 +63,7 @@ void elegir_opcion(int *opcion) {
 	printf("\n");
 
 	while(*opcion != 1 && *opcion != 2 && *opcion != 3) {
-		printf("Elegir una opcion entre [1;2;3]\n");
+		printf(" Elegir una opcion entre [1;2;3]: ");
 		scanf("%u",opcion);
 		printf("\n");
 	}
@@ -91,28 +98,27 @@ void desencriptar_imagen(char *ciphertext, bmpInfoHeader header) {
 	return;
 }
 
-void simulacion(char *body, bmpInfoHeader header) {
+void simulacion(char *body, bmpInfoHeader header, int *espera) {
 
-	printf("\n");
-	printf("Se procede a encriptar la imagen.\n");
+	printf("\n * Simulacion de envio y recepcion de imagen * \n\n");
+	sleep(2);
+	printf(" Se procede a encriptar la imagen...\n");
 	sleep(2);
 	encriptar_imagen(body, header);
-	printf("La imagen se ha encriptado con exito.\n");
+	printf(" La imagen se ha encriptado con exito.\n");
 	sleep(1);
 	printf("\n");
-	printf("Enviando la imagen a destino...\n");
-	printf("Si en este momento se interviene la comunicacion, accediendo al archivo, la imagen se vera encriptada.\n");
+	printf(" Enviando la imagen a destino");sleep(2);printf(".");sleep(2);printf(".");sleep(2);printf(".\n");sleep(2);
 	printf("\n");
-	//printf("(Presione enter para continuar...)\n");
-	sleep(20);
+	printf(" (Ingrese un valor para continuar...) ");
+	scanf("%u",espera);
 	printf("\n");
-	printf("La imagen a llegado a destino...\n");
-	sleep(2);
-	printf("Se procede a desencriptar la imagen...\n");
+	printf(" La imagen a llegado a destino...\n\n"); sleep(2);
+	printf(" Se procede a desencriptar la imagen...\n");
 	abrir_imagen(&header, &body);
 	desencriptar_imagen(body, header);
-	printf("La imagen se ha desencriptado con exito.\n");
-	printf("Verifique la autenticidad de la imagen.\n");
-	sleep(5);
+	printf(" La imagen se ha desencriptado con exito.\n"); sleep(2);
+	printf(" \n Verifique la autenticidad de la imagen.");
+	scanf("%u",espera);
 	return;
 }
